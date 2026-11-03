@@ -1,26 +1,38 @@
 # stm32-smarthouse-panel
 
-Ścienny panel sterowania urządzeniami **Tuya** na płytce **STM32F746G-DISCO** — działa **lokalnie przez Ethernet**, bez chmury.
+A wall-mounted control panel for **Tuya** smart-home devices on an **STM32F746G-DISCO** board — works **locally over Ethernet**, without the cloud.
 
-- kafelki urządzeń (rolety, oświetlenie, gniazdka), dotknięcie = przełączenie, przytrzymanie = szczegóły (jasność, barwa, pozycja rolety)
-- grupy wirtualne tworzone na ekranie
-- FreeRTOS + lwIP + LVGL 9, lokalny protokół Tuya 3.3 (AES-128)
-- obudowa naścienna drukowana w 3D (OpenSCAD) — [enclosure/](enclosure/)
+## Features
 
-Specyfikacja: [docs/SPEC.md](docs/SPEC.md).
+- Device tiles (blinds, lights, sockets): tap = toggle, long press = details (brightness, color temperature, blind position)
+- Virtual groups created on the screen (e.g. "all ground-floor blinds")
+- FreeRTOS + lwIP + LVGL 9, local Tuya 3.3 protocol (AES-128)
+- 3D-printed wall enclosure (OpenSCAD) — [enclosure/](enclosure/)
 
-## Konfiguracja urządzeń
+Specification (in Polish): [docs/SPEC.md](docs/SPEC.md).
 
-Klucze lokalne Tuya **nie są** w repozytorium:
+## Device configuration
+
+Tuya local keys are **not** in the repository:
 
 ```sh
 cd tools && python3 -m venv .venv && source .venv/bin/activate && pip install tinytuya
-python tuya_fetch_keys.py        # pobiera listę urządzeń + local_key → tuya_devices.json (w .gitignore)
-python gen_device_table.py       # generuje lib/device_table (nazwy, ID) i lib/device_keys (IP + klucze, w .gitignore)
+python tuya_fetch_keys.py        # fetches the device list + local_key → tuya_devices.json (git-ignored)
+python gen_device_table.py       # generates lib/device_table (names, IDs) and lib/device_keys (IPs + keys, git-ignored)
 ```
 
-`lib/device_table/src/device_table.c` w repozytorium zawiera **przykładowe** ID urządzeń.
+`lib/device_table/src/device_table.c` in the repository contains **sample** device IDs.
 
-## Build
+## Build and test
 
-PlatformIO: `pio run -t upload`, testy: `pio test -e native`.
+PlatformIO:
+
+```sh
+pio run -e disco_f746ng -t upload   # firmware (requires the generated lib/device_keys)
+pio test -e native                  # unit tests on the host
+pio test -e disco_f746ng            # hardware tests (test_board_*) on the board
+```
+
+## License
+
+MIT — see [LICENSE](LICENSE).
