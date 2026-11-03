@@ -1,0 +1,12 @@
+tools/.venv/
+tools/tuya_devices.json
+tools/tuya_qr.png
+__pycache__/
+.pio/
+lib/device_keys/src/device_keys.c
+
+# sekrety / system
+.DS_Store
+.env
+secrets.h
+secrets.py
